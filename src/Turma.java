@@ -25,11 +25,15 @@ public class Turma {
 
     // busca aluno por matrícula
     public int buscaPorMatricula(int matricula) {
-        for (Aluno aluno: alunos) {
-            if (matricula == aluno.getMatricula())
-                return matricula;
-        }
+        for (int i = 0; i < alunos.size(); i++)
+            if (matricula == alunos.get(i).getMatricula())
+                return i;
         return -1;
+    }
+
+    // retorna aluno por posicao
+    public Aluno alunoNaPosicao(int i) {
+        return alunos.get(i);
     }
 
     // altera idade
@@ -38,6 +42,20 @@ public class Turma {
             return false; // se o aluno não está na turma, a operação não é realizada, então false
         alunos.get(buscaPorMatricula(matricula)).setIdade(novaIdade);
         return true;
+    }
+
+    // está na turma?
+    public boolean estaNaTurma(Aluno aluno) {
+        return alunos.contains(aluno);
+    }
+
+    @Override
+    public String toString() {
+        String string = "";
+        for (Aluno aluno: alunos) {
+            string += aluno.toString() + "\n";
+        }
+        return string;
     }
 
 
