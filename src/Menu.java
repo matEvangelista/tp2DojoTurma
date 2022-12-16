@@ -32,6 +32,9 @@ public class Menu {
                 case 5:
                     alteraIdade();
                     break;
+                case 6:
+                    registraNota();
+                    break;
             }
         } while (continua);
     }
@@ -44,6 +47,7 @@ public class Menu {
                 "3) Busca por matrícula\n" +
                 "4) Remover aluno por matrícula\n" +
                 "5) Alterar a idade de um aluno em específico\n" +
+                "6) Adicionar uma prova\n" +
                 "0) Sair\n");
     }
 
@@ -56,7 +60,7 @@ public class Menu {
             System.out.print("Digite uma opcao: ");
             op = scanner.nextInt();
             consomeEnter();
-            if (op >= 0 && op <= 5)
+            if (op >= 0 && op <= 6)
                 break;
             System.out.println("Digite um valor correto. Tente novamente");
         }
@@ -118,6 +122,62 @@ public class Menu {
             int idade = leIdade();
             turma.alunoNaPosicao(posicao).setIdade(idade);
             System.out.println("Idade cadastrada com sucesso.");
+        }
+    }
+
+    // registra nota
+    private void registraNota() {
+        int matricula = leMatricula();
+        int posicao = turma.buscaPorMatricula(matricula);
+        if (posicao == -1) {
+            System.out.println("Não é possível registrar a nota de um aluno que não existe");
+        } else {
+            int numeroProva = leNumeroProva();
+            TipoProva tipoProva = leTipoProva(numeroProva);
+            ConteudoProva conteudoProva = leConteudoProva();
+            float nota = leNota();
+            Prova prova = new Prova(nota, conteudoProva, tipoProva);
+            turma.alunoNaPosicao(posicao).setProva(numeroProva, prova);
+        }
+    }
+
+    // lê conteudo da prova
+    private ConteudoProva leConteudoProva() {
+        System.out.print("Digite o conteúdo da prova: ");
+        String conteudo = scanner.nextLine();
+        return new ConteudoProva(conteudo);
+    }
+
+    // lê qual prova se trata
+    private int leNumeroProva() {
+        while (true) {
+            System.out.print("Digite o número da prova (1 para P1, 2 para P2 e 3 para PF): ");
+            int num = scanner.nextInt();
+            consomeEnter();
+            if (num > 0 && num < 4)
+                return num - 1;
+            System.out.println("Digite corretamente");
+        }
+    }
+
+    private TipoProva leTipoProva(int numeroProva) {
+        return switch (numeroProva) {
+            case 0 -> TipoProva.AVALIACAO1;
+            case 1 -> TipoProva.AVALIACAO2;
+            default -> TipoProva.PROVA_FINAL;
+        };
+    }
+
+    // lê nota
+    private float leNota() {
+        float nota;
+        while (true) {
+            System.out.printf("Digite a nota da prova: ");
+            nota = scanner.nextFloat();
+            consomeEnter();
+            if (nota >= 0 && nota <= 10)
+                return nota;
+            System.out.println("Digite uma nota entre 0 e 10");
         }
     }
 
